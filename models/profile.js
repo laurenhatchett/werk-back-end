@@ -19,7 +19,8 @@ const myLogSchema = new Schema ({
 
 const profileSchema = new Schema({
   name: String,
-  photo: String
+  photo: String,
+  jobs: [{ type: Schema.Types.ObjectId, ref: 'Job' }],
 },{
   timestamps: true,
 })
