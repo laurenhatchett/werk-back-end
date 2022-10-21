@@ -29,6 +29,8 @@ const resourceSchema = new Schema (
     type: String,
     required: true,
   },
-  owner:[{ObjectId ref:'Profile'}]
+  owner:[{type: Schema.Types.ObjectId, ref:'Profile'}],
+  timestamps: true,
+
   }
 ) 
