@@ -31,6 +31,9 @@ const resourceSchema = new Schema (
   },
   owner:[{type: Schema.Types.ObjectId, ref:'Profile'}],
   timestamps: true,
-
   }
 ) 
+
+const Resource = mongoose.model('Resource', resourceSchema)
+
+export { Resource }
