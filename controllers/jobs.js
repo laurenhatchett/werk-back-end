@@ -28,7 +28,13 @@ const index = async (req, res) => {
 }
 
 const show = async (req, res) => {
-
+  try {
+    const job = await Job.findById(req.params.id)
+    res.status(200).json(job)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
 }
 
 const update = async (req, res) => {
