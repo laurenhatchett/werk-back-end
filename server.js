@@ -19,7 +19,7 @@ app.use(formData.parse())
 
 app.use('/api/profiles', profilesRouter)
 app.use('/api/auth', authRouter)
-app.use('./api/jobs', jobsRouter)
+app.use('/api/jobs', jobsRouter)
 
 app.use(function (req, res, next) {
   res.status(404).json({ err: 'Not found' })

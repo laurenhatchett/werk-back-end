@@ -20,10 +20,10 @@ const jobSchema = new Schema({
   jobDetails: String,
   skills: String,
   private: Boolean,
-},{
-  timestamps: true,
+}, {
+  timestamps: true
 })
 
 const Job = mongoose.model('Job', jobSchema)
 
-export { Job}
+export { Job }
