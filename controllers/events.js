@@ -25,7 +25,19 @@ const show = async (req, res) => {
   })
 }
 
+const index = async (req, res) => {
+  Event.find({})
+  .then(events => {
+    res.json(events)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
+
 export {
   create,
   show,
+  index,
 }
