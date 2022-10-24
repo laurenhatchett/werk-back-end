@@ -4,10 +4,6 @@ const Schema = mongoose.Schema
 
 const resourceSchema = new Schema (
   {
-  id: {
-    type: String,
-    required: true
-  },
   name: {
     type: String,
     required: true,
@@ -29,10 +25,11 @@ const resourceSchema = new Schema (
     type: String,
     required: true,
   },
-  owner:[{type: Schema.Types.ObjectId, ref:'Profile'}],
-  timestamps: true,
-  }
-) 
+  owner:
+    [{type: Schema.Types.ObjectId, ref:'Profile'}]
+},{ 
+timestamps: true
+}) 
 
 const Resource = mongoose.model('Resource', resourceSchema)
 
