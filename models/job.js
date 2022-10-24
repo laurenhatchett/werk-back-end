@@ -20,6 +20,7 @@ const jobSchema = new Schema({
   jobDetails: String,
   skills: String,
   private: Boolean,
+  owner: {type: Schema.Types.ObjectId, ref: 'Profile'},
 }, {
   timestamps: true
 })
