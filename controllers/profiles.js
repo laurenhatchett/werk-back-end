@@ -45,8 +45,22 @@ const createLog = async (req, res) => {
   })
 }
 
+function deleteLog (req, res)  {
+  Profile.findById(req.user.profile)
+  .then(profile => {
+    profile.myLogs.remove({_id: req.params.id})
+    profile.save()
+    res.json(profile)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
+
 export { 
   index, 
   addPhoto, 
   createLog,
+  deleteLog
 }
