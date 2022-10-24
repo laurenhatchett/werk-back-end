@@ -1,23 +1,31 @@
 import { Event } from "../models/event.js";
-import { Profile } from "../models/profile.js";
 
-// const create = async (req, res) => {
-//   try {
-//     req.body.author = req.user.profile
-//     const event = await Event.create(req.body)
-//     const profile = await Profile.findByIdAndUpdate(
-//       req.user.profile,
-//       { $push: { events: event} },
-//       { new: true }
-//     )
-//     event.author = profile
-//     res.status(201).json(event)
-//   } catch (err) {
-//     console.log(err)
-//     res.status(500).json(err)
-//   }
-// }
+const create = async (req, res) => {
+  for (let key in req.body) {
+    if (req.body[key] ==='') delete req.body[key]
+  }
+  Event.create(req.body)
+  .then(event => {
+    res.status(201).json(event)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  })
+}
+
+const show = async (req, res) => {
+  Event.findById(req.params.id)
+  .then(event => {
+    res.json(event)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
 
 export {
-  // create
+  create,
+  show,
 }
