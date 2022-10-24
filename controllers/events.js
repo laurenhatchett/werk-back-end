@@ -36,8 +36,20 @@ const index = async (req, res) => {
   })
 }
 
+const deleteEvent = async (req, res) => {
+  Event.findByIdAndDelete(req.params.id)
+  .then(deletedEvent => {
+    res.json(deletedEvent)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
+
 export {
   create,
   show,
   index,
+  deleteEvent as delete,
 }
