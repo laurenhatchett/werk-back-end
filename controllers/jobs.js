@@ -5,6 +5,7 @@ function create(req, res) {
   for (let key in req.body) {
     if (req.body[key] === '') delete req.body[key]
   }
+  req.body.owner = req.user.profile
   Job.create(req.body)
   .then(job => {
     Profile.findByIdAndUpdate(
@@ -33,6 +34,7 @@ function index(req, res) {
 
 function show(req, res) {
   Job.findById(req.params.id)
+  .populate('owner')
   .then(job => {
     res.status(200).json(job)
   }) 
@@ -48,7 +50,12 @@ function update(req, res) {
   }
   Job.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then(updatedJob => {
-    res.status(201).json(updatedJob)
+    if (updatedJob.owner.equals(req.user.profile)) {
+      console.log(updatedJob.owner)
+      res.status(201).json(updatedJob)
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
@@ -59,7 +66,11 @@ function update(req, res) {
 function deleteJob(req, res) {
   Job.findByIdAndDelete(req.params.id)
   .then(deletedJob => {
-    res.status(200).json(deletedJob)
+    if (deletedJob.owner.equals(req.user.profile)) {
+      res.status(200).json(deletedJob)
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
