@@ -1,48 +1,70 @@
 import { Profile } from "../models/profile.js"
 import { Job } from "../models/job.js"
 
-const create = async (req, res) => {
-  try {
-    const job = await Job.create(req.body)
-    const profile = await Profile.findByIdAndUpdate(
+function create(req, res) {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
+  }
+  Job.create(req.body)
+  .then(job => {
+    Profile.findByIdAndUpdate(
       req.user.profile,
       { $push: { jobs: job } },
       { new: true }
     )
     res.status(201).json(job)
-  } catch (err) {
+  })
+  .catch(err => {
     console.log(err)
     res.status(500).json(err)
-  }
+  }) 
 }
 
-const index = async (req, res) => {
-  try {
-    const jobs = await Job.find({})
-    .sort({ createdAt: 'desc' })
-  res.status(200).json(jobs)
-  } catch (err) {
+function index(req, res) {
+  Job.find({}).sort({ createdAt: 'desc' })
+  .then(jobs => {
+    res.status(200).json(jobs)
+  })
+  .catch (err => {
     console.log(err)
     res.status(500).json(err)
-  }
+  })
 }
 
-const show = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id)
+function show(req, res) {
+  Job.findById(req.params.id)
+  .then(job => {
     res.status(200).json(job)
-  } catch (err) {
+  }) 
+  .catch(err => {
     console.log(err)
     res.status(500).json(err)
+  }) 
+}
+
+function update(req, res) {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
   }
+  Job.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  .then(updatedJob => {
+    res.status(201).json(updatedJob)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  }) 
 }
 
-const update = async (req, res) => {
-
-}
-
-const deleteJob = async (req, res) => {
-
+function deleteJob(req, res) {
+  Job.findByIdAndDelete(req.params.id)
+  .then(deletedJob => {
+    res.status(200).json(deletedJob)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  }) 
 }
 
 export {
