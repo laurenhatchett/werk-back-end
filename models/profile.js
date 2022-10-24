@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 const myLogSchema = new Schema ({
   date: {
-    type: Number,
+    type: Date,
     required: true
   },
   logEntry: {
