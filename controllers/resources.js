@@ -9,8 +9,6 @@ function create(req, res) {
   }
   Resource.create(req.body)
   .then(resource => {
-    
- 
     res. status(201).json(resource)
   })
   .catch(err => {
@@ -32,6 +30,7 @@ function index(req, res) {
 
 function show(req, res) {
   Resource.findById(req.params.id)
+  .populate('owner')
   .then(resource => {
     res.json(resource)
   })
@@ -47,19 +46,32 @@ function updateResource(req, res) {
   }
   Resource.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then(updatedResource => {
-    res.json(updatedResource)
+      if (updatedResource.owner.equals(req.user.profile)){ 
+    res.satus(201).json(updatedResource)
+  } else {
+    throw new Error ('Not Authorized')
+  }
   })
   .catch(err => {
     console.log(err)
-    res.json(err)
+    res.status(500).json(err)
   })
 }
 
 
+
 function deleteResource(req, res) {
+  req.body.owner = req.user.profile
   Resource.findByIdAndDelete(req.params.id)
   .then(deletedResource => {
-    res.json(deletedResource)
+    if (deletedResource.owner.equals(req.profile.id)) {
+      Resource.delete()
+      .then(deletedResource => {
+        res.json(deletedResource)
+      })
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
