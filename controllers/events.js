@@ -47,9 +47,24 @@ const deleteEvent = async (req, res) => {
   })
 }
 
+const updateEvent = async (req, res) => {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
+  }
+  Event.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  .then(updatedEvent => {
+    res.json(updatedEvent)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
+
 export {
   create,
   show,
   index,
   deleteEvent as delete,
+  updateEvent as update
 }
