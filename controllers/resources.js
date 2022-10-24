@@ -3,10 +3,10 @@ import { Resource } from "../models/resource.js"
 
 
 function create(req, res) {
-  req.body.owner = req.user.profile
   for (let key in req.body) {
     if (req.body[key] === '') delete req.body[key]
   }
+  req.body.owner = req.user.profile
   Resource.create(req.body)
   .then(resource => {
     res. status(201).json(resource)
@@ -61,14 +61,10 @@ function updateResource(req, res) {
 
 
 function deleteResource(req, res) {
-  req.body.owner = req.user.profile
   Resource.findByIdAndDelete(req.params.id)
   .then(deletedResource => {
-    if (deletedResource.owner.equals(req.profile.id)) {
-      Resource.delete()
-      .then(deletedResource => {
-        res.json(deletedResource)
-      })
+    if (deletedResource.owner.equals(req.user.profile)) {
+      res.status(200).json(deletedResource)
     } else {
       throw new Error('Not Authorized')
     }
