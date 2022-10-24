@@ -13,6 +13,6 @@ router.get('/', checkAuth, jobsCtrl.index)
 router.get('/:id', checkAuth, jobsCtrl.show)
 router.put('/:id', checkAuth, jobsCtrl.update)
 router.post('/', checkAuth, jobsCtrl.create)
-// router.delete('/:id', checkAuth, blogsCtrl.delete)
+router.delete('/:id', checkAuth, jobsCtrl.deleteJob)
 
 export { router }
