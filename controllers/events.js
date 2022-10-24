@@ -1,5 +1,4 @@
 import { Event } from "../models/event.js";
-import { Profile } from "../models/profile.js"
 
 function create(req, res) {
   for (let key in req.body) {
@@ -29,9 +28,9 @@ function show(req, res) {
 }
 
 function index(req, res) {
-  Event.find({})
+  Event.find({}).sort({ createdAt: 'desc' })
   .then(events => {
-    res.json(events)
+    res.status(200).json(events)
   })
   .catch(err => {
     console.log(err)
@@ -42,7 +41,11 @@ function index(req, res) {
 function deleteEvent(req, res) {
   Event.findByIdAndDelete(req.params.id)
   .then(deletedEvent => {
-    res.json(deletedEvent)
+    if (deletedEvent.owner.equals(req.user.profile)) {
+      res.status(200).json(deletedEvent)
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
@@ -50,29 +53,29 @@ function deleteEvent(req, res) {
   })
 }
 
-// function update(req, res) {
-//   for (let key in req.body) {
-//     if (req.body[key] === '') delete req.body[key]
-//   }
-//   Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
-//   .then(updatedEvent => {
-//     if (updatedEvent.owner.equals(req.user.profile)) {
-//       console.log(updatedEvent.owner)
-//       res.status(201).json(updatedEvent)
-//     } else {
-//       throw new Error('Not Authorized')
-//     }
-//   })
-//   .catch(err => {
-//     console.log(err)
-//     res.status(500).json(err)
-//   }) 
-// }
+function update(req, res) {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
+  }
+  Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  .then(updatedEvent => {
+    if (updatedEvent.owner.equals(req.user.profile)) {
+      console.log(updatedEvent.owner)
+      res.status(201).json(updatedEvent)
+    } else {
+      throw new Error('Not Authorized')
+    }
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  }) 
+}
 
 export {
   create,
   show,
   index,
   deleteEvent as delete,
-  // update
+  update
 }
