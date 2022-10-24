@@ -42,12 +42,29 @@ function show(req, res) {
   }) 
 }
 
-const update = async (req, res) => {
-
+function update(req, res) {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
+  }
+  Job.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  .then(updatedJob => {
+    res.status(201).json(updatedJob)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  }) 
 }
 
-const deleteJob = async (req, res) => {
-
+function deleteJob(req, res) {
+  Job.findByIdAndDelete(req.params.id)
+  .then(deletedJob => {
+    res.status(200).json(deletedJob)
+  })
+  .catch(err => {
+    console.log(err)
+    res.status(500).json(err)
+  }) 
 }
 
 export {
