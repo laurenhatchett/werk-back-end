@@ -1,9 +1,10 @@
 import { Event } from "../models/event.js";
 
-const create = async (req, res) => {
+function create(req, res) {
   for (let key in req.body) {
     if (req.body[key] ==='') delete req.body[key]
   }
+  req.body.owner = req.user.profile
   Event.create(req.body)
   .then(event => {
     res.status(201).json(event)
@@ -14,8 +15,9 @@ const create = async (req, res) => {
   })
 }
 
-const show = async (req, res) => {
+function show(req, res) {
   Event.findById(req.params.id)
+  .populate("owner")
   .then(event => {
     res.json(event)
   })
@@ -25,10 +27,10 @@ const show = async (req, res) => {
   })
 }
 
-const index = async (req, res) => {
-  Event.find({})
+function index(req, res) {
+  Event.find({}).sort({ createdAt: 'desc' })
   .then(events => {
-    res.json(events)
+    res.status(200).json(events)
   })
   .catch(err => {
     console.log(err)
@@ -36,10 +38,14 @@ const index = async (req, res) => {
   })
 }
 
-const deleteEvent = async (req, res) => {
+function deleteEvent(req, res) {
   Event.findByIdAndDelete(req.params.id)
   .then(deletedEvent => {
-    res.json(deletedEvent)
+    if (deletedEvent.owner.equals(req.user.profile)) {
+      res.status(200).json(deletedEvent)
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
@@ -47,18 +53,23 @@ const deleteEvent = async (req, res) => {
   })
 }
 
-const updateEvent = async (req, res) => {
+function update(req, res) {
   for (let key in req.body) {
     if (req.body[key] === '') delete req.body[key]
   }
-  Event.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then(updatedEvent => {
-    res.json(updatedEvent)
+    if (updatedEvent.owner.equals(req.user.profile)) {
+      console.log(updatedEvent.owner)
+      res.status(201).json(updatedEvent)
+    } else {
+      throw new Error('Not Authorized')
+    }
   })
   .catch(err => {
     console.log(err)
-    res.json(err)
-  })
+    res.status(500).json(err)
+  }) 
 }
 
 export {
@@ -66,5 +77,5 @@ export {
   show,
   index,
   deleteEvent as delete,
-  updateEvent as update
+  update
 }
