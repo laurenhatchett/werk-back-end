@@ -29,4 +29,24 @@ function addPhoto(req, res) {
   })
 }
 
-export { index, addPhoto }
+const createLog = async (req, res) => {
+  for (let key in req.body) {
+    if (req.body[key] === '') delete req.body[key]
+  }
+  Profile.findById(req.params.id)
+  .then(logs => {
+    Profile.myLogs.push(req.body)
+    Profile.save()
+    res.json(logs)
+  })
+  .catch(err => {
+    console.log(err)
+    res.json(err)
+  })
+}
+
+export { 
+  index, 
+  addPhoto, 
+  createLog,
+}
