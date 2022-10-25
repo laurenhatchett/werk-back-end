@@ -26,7 +26,7 @@ const resourceSchema = new Schema (
     required: true,
   },
   owner:
-    [{type: Schema.Types.ObjectId, ref:'Profile'}]
+    {type: Schema.Types.ObjectId, ref:'Profile'}
 },{ 
 timestamps: true
 }) 
