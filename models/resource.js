@@ -17,8 +17,7 @@ const resourceSchema = new Schema (
     required: true,
   },
   category: {
-    type: [String],
-    required: true,
+    type: String,
     enum: ["book", "video", "webiste", "interview tip", "blog", "article", "other"]
   },
   skills: {
