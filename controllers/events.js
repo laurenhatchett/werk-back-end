@@ -53,26 +53,24 @@ function deleteEvent(req, res) {
   })
 }
 
-function update (req, res) {
+function update(req, res) {
+  console.log('BBBBBBBB', req.body)
   for (let key in req.body) {
     if (req.body[key] === '') delete req.body[key]
   }
-  Resource.findById(req.params.id)
+  Event.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then(updatedEvent => {
-      if (updatedEvent.owner._id.equals(req.user.profile)){ 
-        for (let key in req.body) {
-          updatedEvent[key] = req.body[key]
-        }
-        updatedEvent.save()
-        console.log ('This is the updated Event', updatedEvent)
-        res.status(201).json(updatedEvent)
-  } else 
-    res.status(401).json ({err:'Not Authorized'})
+    if (updatedEvent.owner.equals(req.user.profile)) {
+      console.log('UPDATED EVENT OWNER', updatedEvent.owner)
+    } else {
+      throw new Error('Not Authorized')
+    }
+    res.json(updatedEvent)
   })
   .catch(err => {
     console.log(err)
-    res.status(500).json({err: err.errmsg})
-  })
+    res.status(500).json(err)
+  }) 
 }
 
 export {

@@ -45,6 +45,8 @@ function show(req, res) {
 }
 
 function update(req, res) {
+  console.log('REQ.BODY', req.body)
+  console.log('REQ.PARAMS.ID', req.params.id);
   for (let key in req.body) {
     if (req.body[key] === '') delete req.body[key]
   }
