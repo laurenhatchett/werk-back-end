@@ -51,10 +51,9 @@ function update(req, res) {
   Job.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then(updatedJob => {
     if (updatedJob.owner.equals(req.user.profile)) {
-      console.log(updatedJob.owner)
       res.status(201).json(updatedJob)
     } else {
-      throw new Error('Not Authorized')
+      res.status(401).json ({err:'Not Authorized'})
     }
   })
   .catch(err => {
@@ -69,7 +68,7 @@ function deleteJob(req, res) {
     if (deletedJob.owner.equals(req.user.profile)) {
       res.status(200).json(deletedJob)
     } else {
-      throw new Error('Not Authorized')
+      res.status(401).json ({err:'Not Authorized'})
     }
   })
   .catch(err => {

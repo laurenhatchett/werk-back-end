@@ -12,7 +12,6 @@ const myLogSchema = new Schema ({
     required: true
   },
   skills: String,
-  private: Boolean
 }, {
   timestamps: true
 })
