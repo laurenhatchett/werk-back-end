@@ -5,11 +5,9 @@ const Schema = mongoose.Schema
 const myLogSchema = new Schema ({
   date: {
     type: Date,
-    required: true
   },
   logEntry: {
     type: String,
-    required: true
   },
   skills: String,
 }, {
