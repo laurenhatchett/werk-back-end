@@ -48,7 +48,7 @@ const createLog = async (req, res) => {
 function deleteLog (req, res)  {
   Profile.findById(req.user.profile)
   .then(profile => {
-    profile.myLogs.remove({_id: req.params.id})
+    profile.myLogs.remove({_id: req.params.logId})
     profile.save()
     res.json(profile)
   })
