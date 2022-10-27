@@ -15,11 +15,11 @@ const jobSchema = new Schema({
     type: String,
     required: true,
   },
-  resume: String,
-  coverLetter: String,
-  jobDetails: String,
+  jobDetails: {
+    type: String,
+    required: true,
+  },
   skills: String,
-  private: Boolean,
   owner: {type: Schema.Types.ObjectId, ref: 'Profile'},
 }, {
   timestamps: true
